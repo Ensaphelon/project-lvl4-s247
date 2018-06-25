@@ -18,6 +18,7 @@
     "start": "babel-node ./src/bin/slack.js",
     "eslint": "eslint src/**",
     "webpack": "webpack",
+    "heroku-postbuild": "npm run build",
     "build-server": "babel server --out-dir dist --source-maps inline",
     "build-app": "npm run webpack -- -p --env production",
     "build": "npm run build-app && npm run build-server",
