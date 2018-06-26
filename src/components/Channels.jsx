@@ -4,8 +4,8 @@ const Channels = ({ channels }) => {
   if (channels.length) {
     return (
       <ul className="list-group">
-        {channels.map((channel, index) => (
-          <li className="list-group-item list-group-item-action" key={index}>
+        {channels.map(channel => (
+          <li className="list-group-item list-group-item-action" key={channel.id}>
             {channel.name}
           </li>
         ))}
