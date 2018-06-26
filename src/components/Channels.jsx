@@ -1,7 +1,6 @@
 import React from 'react';
 
-const Channels = (props) => {
-  const { channels } = props;
+const Channels = ({ channels }) => {
   if (channels.length) {
     return (
       <ul className="list-group">
