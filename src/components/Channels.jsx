@@ -1,11 +1,11 @@
 import React from 'react';
 import cn from 'classnames';
 
-const Channels = ({ channels, currentChannelId }) => {
-  if (channels.length) {
+const Channels = ({channels: { list, currentChannelId }}) => {
+  if (list.length) {
     return (
       <ul className="list-group">
-        {channels.map((channel) => {
+        {list.map((channel) => {
           const className = cn({
             'list-group-item list-group-item-action': true,
             active: channel.id === currentChannelId,
