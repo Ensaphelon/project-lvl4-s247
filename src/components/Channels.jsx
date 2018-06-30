@@ -1,25 +1,26 @@
 import React from 'react';
 import cn from 'classnames';
+import isArray from 'lodash';
 
-const Channels = ({channels: { list, currentChannelId }}) => {
-  if (list.length) {
-    return (
-      <ul className="list-group">
-        {list.map((channel) => {
-          const className = cn({
-            'list-group-item list-group-item-action': true,
-            active: channel.id === currentChannelId,
-          });
-          return (
-            <li className={className} key={channel.id}>
-              {channel.name}
-            </li>
-          );
-        })}
-      </ul>
-    );
+const renderChannelItem = (className, id, name) => (
+  <li className={className} key={id}>{name}</li>
+);
+
+const Channels = ({channels: { list }, currentChannelId}) => {
+  if (!isArray(list) && list.length === 0) {
+    return null;
   }
-  return null;
+  return (
+    <ul className="list-group">
+      {list.map(({ id, name }) => {
+        const className = cn({
+          'list-group-item list-group-item-action': true,
+          active: id === currentChannelId,
+        });
+        {renderChannelItem(className, id, name)}
+      })}
+    </ul>
+  );
 };
 
 export default Channels;

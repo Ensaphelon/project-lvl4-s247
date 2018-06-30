@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom';
-import 'babel-polyfill'; //  TODO: make configuration in webpack
+import 'babel-polyfill';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../assets/application.css';
 import gon from 'gon';

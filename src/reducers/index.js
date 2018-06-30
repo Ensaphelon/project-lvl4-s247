@@ -1,36 +1,44 @@
 import { combineReducers } from 'redux';
 import { handleActions } from 'redux-actions';
-import { uniqueId } from 'lodash';
+import { uniqueId, omit } from 'lodash';
 import { reducer as formReducer } from 'redux-form';
 import * as actions from '../actions';
+
+const channels = handleActions({}, {});
+const currentChannelId = handleActions({}, {});
 
 const messages = handleActions({
   [actions.addMessage](state, {
     payload: {
       text,
-      userId,
+      userName,
       id,
       channelId,
     },
   }) {
     return [...state, {
       text,
-      userId,
+      userName,
       id,
       channelId,
     }];
   },
 }, []);
 
-const addMessageState = handleActions({
-  [actions.addMessageRequest]() {
-    return { disabled: true };
+const sendMessageState = handleActions({
+  [actions.sendMessageSuccess]({ queue }, { payload }) {
+    return {
+      queue: payload ? { ...omit(queue, payload) } : { ...queue },
+    };
   },
-  [actions.addMessageSuccess]() {
-    return { disabled: false };
+  [actions.sendMessageFailure]({ queue }, { payload }) {
+    return {
+      queue: payload ? { ...queue, [payload.id]: payload.text }
+        : { ...queue },
+    };
   },
 }, {
-  disabled: false,
+  queue: {},
 });
 
 const user = handleActions({
@@ -39,15 +47,23 @@ const user = handleActions({
   },
 }, {});
 
-const channels = handleActions({}, {});
-
-const currentChannelId = handleActions({}, {});
+const uiState = handleActions({
+  [actions.sendMessageFailure]() {
+    return { errorMessageHidden: false };
+  },
+  [actions.sendMessageSuccess]() {
+    return { errorMessageHidden: true };
+  },
+}, {
+  errorMessageHidden: true,
+});
 
 export default combineReducers({
-  addMessageState,
-  messages,
-  user,
   channels,
   currentChannelId,
+  messages,
+  sendMessageState,
+  user,
+  uiState,
   form: formReducer,
 });
