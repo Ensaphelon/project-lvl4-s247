@@ -17,7 +17,7 @@ const Channels = ({channels: { list }, currentChannelId}) => {
           'list-group-item list-group-item-action': true,
           active: id === currentChannelId,
         });
-        {renderChannelItem(className, id, name)}
+        return renderChannelItem(className, id, name);
       })}
     </ul>
   );
