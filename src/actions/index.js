@@ -24,7 +24,7 @@ export const sendMessage = ({ text, userName }, channelId) => (dispatch) => {
       setTimeout(() => {
         send(data, true);
       }, 3000);
-      dispatch(sendMessageFailure(isRepeat ? null : { id, text }));
+      dispatch(sendMessageFailure(isRepeat ? null : { id, text, channelId }));
     }
   };
   send(sendData);
@@ -33,3 +33,5 @@ export const sendMessage = ({ text, userName }, channelId) => (dispatch) => {
 export const addMessage = createAction('MESSAGE_ADD');
 
 export const setUserName = createAction('USERNAME_SET');
+
+export const setActiveChannel = createAction('CHANNEL_SET_ACTIVE');
