@@ -1,6 +1,10 @@
 import { connect } from 'react-redux';
 import Component from '../components/Messages';
 
-const mapStateToProps = state => state;
+const mapStateToProps = ({ sendMessageState: { queue }, messages, currentChannelId }) => ({
+  queue,
+  messages,
+  currentChannelId,
+});
 
 export default connect(mapStateToProps)(Component);
