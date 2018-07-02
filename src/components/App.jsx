@@ -1,5 +1,5 @@
 import React from 'react';
-import MessagesContainer from '../containers/Messages';
+import Messages from './Messages';
 import Channels from './Channels';
 import Form from './Form';
 import connect from '../connect';
@@ -23,7 +23,7 @@ export default class App extends React.Component {
             <Channels />
           </div>
           <div className="col-xs-12 col-sm-9">
-            <MessagesContainer />
+            <Messages />
           </div>
           <div className="col-xs-12 col-sm-12 pt-3 pb-3">
             <Form />
