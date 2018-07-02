@@ -35,15 +35,21 @@ const messages = handleActions({
 }, []);
 
 const sendMessageState = handleActions({
-  [actions.sendMessageSuccess]({ queue }, { payload }) {
+  [actions.removeMessageFromQueue](state, { payload }) {
     return {
-      queue: payload ? { ...omit(queue, payload) } : { ...queue },
+      queue: payload ? { ...omit(state.queue, payload) } : { ...state.queue },
     };
   },
-  [actions.sendMessageFailure]({ queue }, { payload }) {
+  [actions.sendMessageFailure](state, { payload }) {
+    const message = {
+      text: payload.text,
+      userName: payload.userName,
+      channelId: payload.channelId,
+    };
     return {
-      queue: payload ? { ...queue, [payload.id]: payload.text }
-        : { ...queue },
+      queue: payload ? {
+        ...state.queue, [uniqueId()]: message,
+      } : { ...state.queue },
     };
   },
 }, {
@@ -63,12 +69,6 @@ const uiState = handleActions({
   [actions.setFieldDefaultState](state) {
     return { ...state, addChannelFormHasError: false };
   },
-  [actions.sendMessageFailure](state) {
-    return { ...state, errorMessageHidden: false };
-  },
-  [actions.sendMessageSuccess](state) {
-    return { ...state, errorMessageHidden: true };
-  },
   [actions.toggleAddChannelForm](state) {
     return { ...state, addChannelFormHidden: !state.addChannelFormHidden };
   },
@@ -86,7 +86,6 @@ const uiState = handleActions({
     };
   },
 }, {
-  errorMessageHidden: true,
   addChannelFormHidden: true,
   addChannelFormHasError: false,
   createChannelButtonDisabled: false,

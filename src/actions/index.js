@@ -1,33 +1,34 @@
 import { createAction } from 'redux-actions';
 import axios from 'axios';
-import { uniqueId } from 'lodash';
 import { addMessageUrl, addChannelUrl } from '../routes';
 
-export const sendMessageRequest = createAction('MESSAGE_SEND_REQUEST');
-export const sendMessageSuccess = createAction('MESSAGE_SEND_SUCCESS');
 export const sendMessageFailure = createAction('MESSAGE_SEND_FAILURE');
 
-export const sendMessage = ({ text, userName }, channelId) => (dispatch) => {
-  const url = addMessageUrl(channelId);
-  const id = uniqueId();
-  const sendData = {
-    data: {
-      attributes: { text, userName },
-    },
-  };
-  const send = async (data, isRepeat) => {
-    try {
-      await axios.post(url, data);
-      dispatch(sendMessageSuccess(isRepeat ? id : null));
-    } catch (e) {
-      console.warn(e); // eslint-disable-line no-console
-      setTimeout(() => {
-        send(data, true);
-      }, 3000);
-      dispatch(sendMessageFailure(isRepeat ? null : { id, text, channelId }));
-    }
-  };
-  send(sendData);
+export const removeMessageFromQueue = createAction('MESSAGE_OVE_FROM_QUEUE');
+
+export const sendMessage = (message, isResend, key) => (dispatch) => {
+  const { text, userName, channelId } = message;
+  const url = addMessageUrl(message.channelId);
+  const sendData = { data: { attributes: { text, userName } } };
+  return new Promise((resolve, reject) => {
+    axios.post(url, sendData)
+      .then(() => {
+        if (isResend) {
+          dispatch(removeMessageFromQueue(key));
+        }
+        resolve();
+      })
+      .catch(() => {
+        if (!isResend) {
+          dispatch(sendMessageFailure({
+            text,
+            userName,
+            channelId,
+          }));
+        }
+        reject();
+      });
+  });
 };
 
 export const addMessage = createAction('MESSAGE_ADD');
@@ -44,7 +45,7 @@ export const createChannelRequest = createAction('CHANNEL_CREATE_REQUEST');
 export const createChannelFailure = createAction('CHANNEL_CREATE_FAILURE');
 export const createChannelSuccess = createAction('CHANNEL_CREATE_SUCCESS');
 export const addChannel = createAction('ADD_CHANNEL');
-export const createChannel = (name) => async (dispatch) => {
+export const createChannel = name => async (dispatch) => {
   dispatch(createChannelRequest());
   try {
     const sendData = {
@@ -55,7 +56,7 @@ export const createChannel = (name) => async (dispatch) => {
     await axios.post(addChannelUrl(), sendData);
     dispatch(createChannelSuccess());
   } catch (e) {
-    console.warn(e);  // eslint-disable-line no-console
+    console.warn(e); // eslint-disable-line no-console
     dispatch(createChannelFailure());
   }
 };

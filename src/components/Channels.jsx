@@ -1,6 +1,5 @@
 import React from 'react';
 import cn from 'classnames';
-import isArray from 'lodash';
 import Trash from 'react-icons/lib/fa/trash';
 import Pencil from 'react-icons/lib/fa/pencil';
 import AddChannel from './ChannelsAdd';
@@ -25,7 +24,6 @@ const renderControls = isActiveChannel => (
   </div>
 );
 
-
 const mapStateToProps = ({ channels, currentChannelId }) => ({
   channels,
   currentChannelId,
@@ -36,9 +34,6 @@ const mapStateToProps = ({ channels, currentChannelId }) => ({
 export default class Channels extends React.Component {
   render() {
     const { channels, currentChannelId, setActiveChannel } = this.props;
-    if (!isArray(channels.list)) {
-      return null;
-    }
     return (
       <ul className="list-group">
         {channels.list.map(({ id, name, removable }) => {
@@ -51,7 +46,9 @@ export default class Channels extends React.Component {
           return (
             <li className="list-group-item p-0 border-white mb-1" key={id}>
               {removable ? renderControls(isActiveChannel) : null }
-              <button onClick={() => setActiveChannel(id)} type="button" className={className}>{name}</button>
+              <button onClick={() => setActiveChannel(id)} type="button" className={className}>
+                {name}
+              </button>
             </li>
           );
         })}
