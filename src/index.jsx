@@ -13,7 +13,7 @@ import faker from 'faker';
 import reducers from './reducers';
 import * as actions from './actions';
 
-import AppContainer from './containers/App';
+import App from './components/App';
 
 if (process.env.NODE_ENV !== 'production') {
   localStorage.debug = 'chat:*';
@@ -46,11 +46,14 @@ const socket = io();
 socket
   .on('newMessage', ({ data: { attributes } }) => {
     store.dispatch(actions.addMessage(attributes));
+  })
+  .on('newChannel', ({ data: { attributes } }) => {
+    store.dispatch(actions.addChannel(attributes));
   });
 
 render(
   <Provider store={store}>
-    <AppContainer />
+    <App />
   </Provider>,
   document.getElementById('chat'),
 );
