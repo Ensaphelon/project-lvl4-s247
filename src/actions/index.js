@@ -3,8 +3,7 @@ import axios from 'axios';
 import { addMessageUrl, addChannelUrl } from '../routes';
 
 export const sendMessageFailure = createAction('MESSAGE_SEND_FAILURE');
-
-export const removeMessageFromQueue = createAction('MESSAGE_OVE_FROM_QUEUE');
+export const removeMessageFromQueue = createAction('MESSAGE_REMOVE_FROM_QUEUE');
 
 export const sendMessage = (message, isResend, key) => (dispatch) => {
   const { text, userName, channelId } = message;
@@ -35,16 +34,16 @@ export const addMessage = createAction('MESSAGE_ADD');
 
 export const setUserName = createAction('USERNAME_SET');
 
-
 // CHANNELS
+export const addChannel = createAction('CHANNEL_ADD');
 export const setActiveChannel = createAction('CHANNEL_SET_ACTIVE');
-export const toggleAddChannelForm = createAction('CHANNEL_ADD_FORM_TOGGLE');
-export const setFieldErrorState = createAction('CHANNEL_ADD_FORM_SET_ERROR_STATE');
-export const setFieldDefaultState = createAction('CHANNEL_ADD_FORM_SET_DEFAULT_STATE');
 export const createChannelRequest = createAction('CHANNEL_CREATE_REQUEST');
 export const createChannelFailure = createAction('CHANNEL_CREATE_FAILURE');
 export const createChannelSuccess = createAction('CHANNEL_CREATE_SUCCESS');
-export const addChannel = createAction('ADD_CHANNEL');
+export const toggleAddChannelForm = createAction('CHANNEL_ADD_FORM_TOGGLE');
+export const setFieldErrorState = createAction('CHANNEL_ADD_FORM_SET_ERROR_STATE');
+export const setFieldDefaultState = createAction('CHANNEL_ADD_FORM_SET_DEFAULT_STATE');
+
 export const createChannel = name => async (dispatch) => {
   dispatch(createChannelRequest());
   try {
