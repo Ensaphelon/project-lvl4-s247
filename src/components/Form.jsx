@@ -6,7 +6,6 @@ const mapStateToProps = ({ user, currentChannelId, sendMessageState }) => ({
   user, currentChannelId, sendMessageState,
 });
 
-
 @connect(mapStateToProps)
 class Form extends React.Component {
   submit = (values) => {
@@ -22,9 +21,7 @@ class Form extends React.Component {
       channelId: currentChannelId,
     };
     return sendMessage(message)
-      .finally(() => {
-        reset();
-      });
+      .finally(reset);
   };
 
   render() {

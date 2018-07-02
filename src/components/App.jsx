@@ -1,6 +1,7 @@
 import React from 'react';
 import Messages from './Messages';
 import Channels from './Channels';
+import MessagesQueue from './MessagesQueue';
 import Form from './Form';
 import connect from '../connect';
 
@@ -24,6 +25,7 @@ export default class App extends React.Component {
           </div>
           <div className="col-xs-12 col-sm-9">
             <Messages />
+            <MessagesQueue />
           </div>
           <div className="col-xs-12 col-sm-12 pt-3 pb-3">
             <Form />
