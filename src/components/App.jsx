@@ -1,8 +1,10 @@
 import React from 'react';
+import Form from './Form';
 import Messages from './Messages';
 import Channels from './Channels';
 import MessagesQueue from './MessagesQueue';
-import Form from './Form';
+import ModalDeleteChannel from './ModalDeleteChannel';
+import ModalRenameChannel from './ModalRenameChannel';
 import connect from '../connect';
 
 const mapStateToProps = state => state;
@@ -22,6 +24,8 @@ export default class App extends React.Component {
         <div className="row">
           <div className="col-xs-12 col-sm-3">
             <Channels />
+            <ModalDeleteChannel />
+            <ModalRenameChannel />
           </div>
           <div className="col-xs-12 col-sm-9">
             <Messages />

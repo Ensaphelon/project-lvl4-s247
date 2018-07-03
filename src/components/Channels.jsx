@@ -2,66 +2,39 @@ import React from 'react';
 import cn from 'classnames';
 import Trash from 'react-icons/lib/fa/trash';
 import Pencil from 'react-icons/lib/fa/pencil';
-import { Modal, Header } from 'react-bootstrap';
 import AddChannel from './ChannelsAdd';
-import ChannelsDeleteForm from './ChannelsDeleteForm';
-import ChannelsRenameForm from './ChannelsRenameForm';
 import connect from '../connect';
 
-const mapStateToProps = ({ channels, currentChannelId, deleteChannel }) => ({
+const mapStateToProps = ({
   channels,
   currentChannelId,
-  deleteChannel,
+  modalDeleteChannelShow,
+  setChannelForModify,
+}) => ({
+  channels,
+  currentChannelId,
+  modalDeleteChannelShow,
+  setChannelForModify,
 });
 
 @connect(mapStateToProps)
 
 export default class Channels extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      modal: {
-        delete: false,
-        rename: false,
-        show: false,
-      },
-      selectedChannel: null,
-    };
-  }
-
-  handleClose() {
-    this.setState({ modal: { show: false } });
-  }
-
-  showModal(id, type) {
-    this.setState({
-      modal: {
-        show: true,
-        [type]: true,
-      },
-      selectedChannel: id,
-    });
-  }
-
-  async handleDelete() {
-    const { selectedChannel } = this.state;
-    const { currentChannelId, deleteChannel } = this.props;
-    await deleteChannel(selectedChannel);
-    this.setState({
-      modal: {
-        show: false,
-      },
-      selectedChannel: currentChannelId === selectedChannel ? 1 : selectedChannel,
-    });
+  handleClick(e, id, showModal) {
+    e.preventDefault();
+    const { setChannelForModify } = this.props;
+    setChannelForModify(id);
+    showModal();
   }
 
   renderControls(isActiveChannel, id) {
+    const { modalDeleteChannelShow, modalRenameChannelShow } = this.props;
     return (
       <div>
         <a href="#!" alt="Edit">
           <Pencil
             size={18}
-            onClick={this.showModal.bind(this, id, 'rename')}
+            onClick={e => this.handleClick(e, id, modalRenameChannelShow)}
             color={isActiveChannel ? 'white' : 'black'}
             className="position-absolute mt-2 ml-1"
           />
@@ -69,7 +42,7 @@ export default class Channels extends React.Component {
         <a href="#!" alt="Delete">
           <Trash
             size={18}
-            onClick={this.showModal.bind(this, id, 'delete')}
+            onClick={e => this.handleClick(e, id, modalDeleteChannelShow)}
             color={isActiveChannel ? 'white' : 'black'}
             className="position-absolute mt-2 ml-4"
           />
@@ -80,22 +53,8 @@ export default class Channels extends React.Component {
 
   render() {
     const { channels, currentChannelId, setActiveChannel } = this.props;
-    const { modal } = this.state;
     return (
       <div>
-        <Modal show={modal.show} onHide={this.handleClose.bind(this)}>
-          <Modal.Body>
-            <ChannelsDeleteForm
-              handleDelete={this.handleDelete.bind(this)}
-              handleClose={this.handleClose.bind(this)}
-              visible={this.state.modal.delete}
-            />
-            <ChannelsRenameForm
-              handleClose={this.handleClose.bind(this)}
-              visible={this.state.modal.rename}
-            />
-          </Modal.Body>
-        </Modal>
         <ul className="list-group">
           {channels.list.map(({ id, name, removable }) => {
             const isActiveChannel = id === currentChannelId;

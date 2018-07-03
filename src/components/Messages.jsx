@@ -23,12 +23,8 @@ class Messages extends React.Component {
           {messages.filter(message => (message.channelId === currentChannelId)).map(message => (
             <li key={message.id} className="messages__item list-group-item">
               <span className="badge badge-pill badge-light">
-                {message.userName}
-                said:
-              </span>
-              <span>
-                {message.text}
-              </span>
+                {message.userName} said:</span>
+              <span>{message.text}</span>
             </li>
           ))}
         </ul>
