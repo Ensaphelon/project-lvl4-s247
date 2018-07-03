@@ -1,6 +1,6 @@
 import { createAction } from 'redux-actions';
 import axios from 'axios';
-import { addMessageUrl, addChannelUrl } from '../routes';
+import { addMessageUrl, addChannelUrl, deleteChannelUrl } from '../routes';
 
 export const sendMessageFailure = createAction('MESSAGE_SEND_FAILURE');
 export const removeMessageFromQueue = createAction('MESSAGE_REMOVE_FROM_QUEUE');
@@ -40,6 +40,7 @@ export const setActiveChannel = createAction('CHANNEL_SET_ACTIVE');
 export const createChannelRequest = createAction('CHANNEL_CREATE_REQUEST');
 export const createChannelFailure = createAction('CHANNEL_CREATE_FAILURE');
 export const createChannelSuccess = createAction('CHANNEL_CREATE_SUCCESS');
+export const deleteChannelSuccess = createAction('CHANNEL_DELETE_SUCCESS');
 export const toggleAddChannelForm = createAction('CHANNEL_ADD_FORM_TOGGLE');
 export const setFieldErrorState = createAction('CHANNEL_ADD_FORM_SET_ERROR_STATE');
 export const setFieldDefaultState = createAction('CHANNEL_ADD_FORM_SET_DEFAULT_STATE');
@@ -57,5 +58,14 @@ export const createChannel = name => async (dispatch) => {
   } catch (e) {
     console.warn(e); // eslint-disable-line no-console
     dispatch(createChannelFailure());
+  }
+};
+
+export const deleteChannel = id => async (dispatch) => {
+  try {
+    await axios.delete(deleteChannelUrl(id), { data: { id } });
+    dispatch(deleteChannelSuccess(id));
+  } catch (e) {
+    console.warn(e); // eslint-disable-line no-console
   }
 };

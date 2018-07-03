@@ -8,6 +8,10 @@ const channels = handleActions({
   [actions.addChannel](state, { payload }) {
     return { list: [...state.list, payload] };
   },
+  [actions.deleteChannelSuccess](state, { payload }) {
+    const { list } = state;
+    return { list: list.filter(channel => channel.id !== payload) };
+  },
 }, {});
 
 const currentChannelId = handleActions({

@@ -26,8 +26,6 @@ export default class App extends React.Component {
           <div className="col-xs-12 col-sm-9">
             <Messages />
             <MessagesQueue />
-          </div>
-          <div className="col-xs-12 col-sm-12 pt-3 pb-3">
             <Form />
           </div>
         </div>
