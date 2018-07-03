@@ -7,7 +7,10 @@ const mapStateToProps = ({ user, currentChannelId, sendMessageState }) => ({
 });
 
 @connect(mapStateToProps)
-class Form extends React.Component {
+@reduxForm(({
+  form: 'message',
+}))
+export default class Form extends React.Component {
   submit = (values) => {
     const {
       user,
@@ -40,7 +43,3 @@ class Form extends React.Component {
     );
   }
 }
-
-export default reduxForm({
-  form: 'message',
-})(Form);

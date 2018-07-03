@@ -7,8 +7,10 @@ import connect from '../connect';
 const mapStateToProps = ({ channels, uiState }) => ({ channels, uiState });
 
 @connect(mapStateToProps)
-
-class ChannelsAdd extends React.Component {
+@reduxForm(({
+  form: 'newChannel',
+}))
+export default class ChannelsAdd extends React.Component {
   render() {
     const { channels: { list } } = this.props;
     const {
@@ -75,7 +77,3 @@ class ChannelsAdd extends React.Component {
     );
   }
 }
-
-export default reduxForm({
-  form: 'newChannel',
-})(ChannelsAdd);
