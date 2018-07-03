@@ -27,7 +27,7 @@ class Form extends React.Component {
   render() {
     const { handleSubmit, submitting } = this.props;
     return (
-      <form className="form-inline" onSubmit={handleSubmit(this.submit)}>
+      <form className="form-inline mt-3" onSubmit={handleSubmit(this.submit)}>
         <div className="w-100">
           <div className="input-group mb-2">
             <Field disabled={submitting} required className="form-control" name="message" component="textarea" />
