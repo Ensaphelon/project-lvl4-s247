@@ -12,11 +12,31 @@ const channels = handleActions({
     const { list } = state;
     return { list: list.filter(channel => channel.id !== payload) };
   },
-}, {});
+  [actions.renameChannelSuccess](state, { payload: { name, channelId } }) {
+    const { list } = state;
+    return {
+      list: list.map((channel) => {
+        const newChannel = channel;
+        if (newChannel.id === channelId) {
+          newChannel.name = name;
+        }
+        return newChannel;
+      }),
+    };
+  },
+  [actions.setChannelForModify](state, { payload }) {
+    return { ...state, channelIdForModify: payload };
+  },
+}, {
+  channelIdForModify: null,
+});
 
 const currentChannelId = handleActions({
   [actions.setActiveChannel](state, { payload }) {
     return payload;
+  },
+  [actions.deleteChannelSuccess](state, { payload }) {
+    return payload === state ? 1 : state;
   },
 }, {});
 
@@ -67,6 +87,21 @@ const user = handleActions({
 }, {});
 
 const uiState = handleActions({
+  [actions.modalDeleteChannelShow](state) {
+    return { ...state, modalDeleteChannelOpened: true };
+  },
+  [actions.modalDeleteChannelHide](state) {
+    return { ...state, modalDeleteChannelOpened: false };
+  },
+  [actions.modalRenameChannelShow](state) {
+    return { ...state, modalRenameChannelOpened: true };
+  },
+  [actions.modalRenameChannelHide](state) {
+    return { ...state, modalRenameChannelOpened: false };
+  },
+  [actions.renameChannelSuccess](state) {
+    return { ...state, modalRenameChannelOpened: false };
+  },
   [actions.setFieldErrorState](state) {
     return { ...state, addChannelFormHasError: true };
   },
@@ -89,10 +124,26 @@ const uiState = handleActions({
       addChannelFormHidden: true,
     };
   },
+  [actions.deleteChannelSuccess](state) {
+    return {
+      ...state,
+      modalDeleteChannelOpened: false,
+      modalDeleteChannelButtonDisabled: false,
+    };
+  },
+  [actions.deleteChannelRequest](state) {
+    return { ...state, modalDeleteChannelButtonDisabled: true };
+  },
+  [actions.deleteChannelFailure](state) {
+    return { ...state, modalDeleteChannelButtonDisabled: false };
+  },
 }, {
+  modalDeleteChannelOpened: false,
+  modalRenameChannelOpened: false,
   addChannelFormHidden: true,
   addChannelFormHasError: false,
   createChannelButtonDisabled: false,
+  modalDeleteChannelButtonDisabled: false,
 });
 
 export default combineReducers({
