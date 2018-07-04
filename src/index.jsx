@@ -21,9 +21,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 const initialState = {
   messages: gon.messages,
-  channels: {
-    list: gon.channels,
-  },
+  channels: gon.channels,
   currentChannelId: gon.currentChannelId,
 };
 

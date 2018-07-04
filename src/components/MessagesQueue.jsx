@@ -4,26 +4,26 @@ import connect from '../connect';
 const mapStateToProps = ({
   sendMessage,
   removeMessageFromQueue,
-  sendMessageState: { queue },
+  messagesQueue,
 }) => ({
   sendMessage,
   removeMessageFromQueue,
-  queue,
+  messagesQueue,
 });
 
 @connect(mapStateToProps)
 
 export default class MessagesQueue extends React.Component {
   render() {
-    const { queue, sendMessage, removeMessageFromQueue } = this.props;
-    const keys = Object.keys(queue);
+    const { messagesQueue, sendMessage, removeMessageFromQueue } = this.props;
+    const keys = Object.keys(messagesQueue);
     return (
       <ul className="messages__list list-group">
         {keys.map((key) => {
           const message = {
-            text: queue[key].text,
-            userName: queue[key].userName,
-            channelId: queue[key].channelId,
+            text: messagesQueue[key].text,
+            userName: messagesQueue[key].userName,
+            channelId: messagesQueue[key].channelId,
           };
           return (
             <li key={key} className="messages__item list-group-item list-group-item-danger">
@@ -36,7 +36,7 @@ export default class MessagesQueue extends React.Component {
               <div>
                 <button
                   type="button"
-                  onClick={() => sendMessage(message, true, key)}
+                  onClick={sendMessage.bind(this, message, true, key)}
                   className="btn btn-link"
                 >
                   Try again
@@ -44,7 +44,7 @@ export default class MessagesQueue extends React.Component {
                 <button
                   type="button"
                   className="btn btn-link"
-                  onClick={() => removeMessageFromQueue(key)}
+                  onClick={removeMessageFromQueue.bind(this, key)}
                 >
                   Delete
                 </button>

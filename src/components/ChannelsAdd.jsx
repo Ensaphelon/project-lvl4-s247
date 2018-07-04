@@ -11,22 +11,34 @@ const mapStateToProps = ({ channels, uiState }) => ({ channels, uiState });
   form: 'newChannel',
 }))
 export default class ChannelsAdd extends React.Component {
-  render() {
-    const { channels: { list } } = this.props;
-    const {
-      uiState,
-      createChannel,
-      handleSubmit,
-      toggleAddChannelForm,
-      setFieldErrorState,
-      setFieldDefaultState,
-    } = this.props;
-    const {
-      addChannelFormHidden,
-      addChannelFormHasError,
-      createChannelButtonDisabled,
-    } = uiState;
+  handleToggle(e) {
+    e.preventDefault();
+    const { toggleAddChannelForm } = this.props;
+    toggleAddChannelForm();
+  }
 
+  changeHandler({ target: { value } }) {
+    const { channels, setFieldErrorState, setFieldDefaultState } = this.props;
+    const containsInChannelsList = find(channels, channel => channel.name === value);
+    return containsInChannelsList ? setFieldErrorState() : setFieldDefaultState();
+  }
+
+  submit({ channelName }, f, { reset }) {
+    const { createChannel, addChannelFormHasError } = this.props;
+    if (!addChannelFormHasError && channelName) {
+      createChannel(channelName, reset);
+    }
+  }
+
+  render() {
+    const {
+      uiState: {
+        addChannelFormHidden,
+        addChannelFormHasError,
+        createChannelButtonDisabled,
+      },
+      handleSubmit,
+    } = this.props;
     const addNewButtonClassName = cn({
       'btn w-100 btn-link': true,
       'd-none': !addChannelFormHidden,
@@ -39,34 +51,24 @@ export default class ChannelsAdd extends React.Component {
       'text-center mb-2 form-control w-100': true,
       'is-invalid': addChannelFormHasError,
     });
-    const submit = ({ channelName }, f, { reset }) => {
-      if (!addChannelFormHasError && channelName) {
-        createChannel(channelName);
-      }
-      reset();
-    };
-    const changeHandler = ({ target: { value } }) => {
-      const containsInChannelsList = find(list, channel => channel.name === value);
-      return containsInChannelsList ? setFieldErrorState() : setFieldDefaultState();
-    };
     return (
       <div>
         <button
-          onClick={toggleAddChannelForm}
+          onClick={this.handleToggle.bind(this)}
           type="button"
           className={addNewButtonClassName}
         >
           Add new
         </button>
-        <form onSubmit={handleSubmit(submit)} className={formClassName}>
+        <form onSubmit={handleSubmit(this.submit.bind(this))} className={formClassName}>
           <Field
             className={fieldClassName}
             name="channelName"
             component="input"
             type="text"
-            onChange={changeHandler}
+            onChange={this.changeHandler.bind(this)}
           />
-          <button type="button" onClick={toggleAddChannelForm} className="btn btn-link">
+          <button type="button" onClick={this.handleToggle.bind(this)} className="btn btn-link">
             Cancel
           </button>
           <button type="submit" className="btn btn-primary" disabled={createChannelButtonDisabled}>
