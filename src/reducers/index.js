@@ -6,30 +6,26 @@ import * as actions from '../actions';
 
 const channels = handleActions({
   [actions.addChannel](state, { payload }) {
-    return { list: [...state.list, payload] };
+    return [...state, payload];
   },
   [actions.deleteChannelSuccess](state, { payload }) {
-    const { list } = state;
-    return { list: list.filter(channel => channel.id !== payload) };
+    return state.filter(channel => channel.id !== payload);
   },
   [actions.renameChannelSuccess](state, { payload: { name, channelId } }) {
-    const { list } = state;
-    return {
-      list: list.map((channel) => {
-        const newChannel = channel;
-        if (newChannel.id === channelId) {
-          newChannel.name = name;
-        }
-        return newChannel;
-      }),
-    };
+    return state.map(channel => (
+      channel.id !== channelId ? channel : {
+        ...channel,
+        name,
+      }
+    ));
   },
+}, []);
+
+const channelIdForModify = handleActions({
   [actions.setChannelForModify](state, { payload }) {
-    return { ...state, channelIdForModify: payload };
+    return payload;
   },
-}, {
-  channelIdForModify: null,
-});
+}, null);
 
 const currentChannelId = handleActions({
   [actions.setActiveChannel](state, { payload }) {
@@ -58,11 +54,9 @@ const messages = handleActions({
   },
 }, []);
 
-const sendMessageState = handleActions({
+const messagesQueue = handleActions({
   [actions.removeMessageFromQueue](state, { payload }) {
-    return {
-      queue: payload ? { ...omit(state.queue, payload) } : { ...state.queue },
-    };
+    return payload ? { ...omit(state, payload) } : { ...state };
   },
   [actions.sendMessageFailure](state, { payload }) {
     const message = {
@@ -70,15 +64,11 @@ const sendMessageState = handleActions({
       userName: payload.userName,
       channelId: payload.channelId,
     };
-    return {
-      queue: payload ? {
-        ...state.queue, [uniqueId()]: message,
-      } : { ...state.queue },
-    };
+    return payload ? {
+      ...state, [uniqueId()]: message,
+    } : { ...state };
   },
-}, {
-  queue: {},
-});
+}, []);
 
 const user = handleActions({
   [actions.setUserName](state, { payload: { userName } }) {
@@ -149,8 +139,9 @@ const uiState = handleActions({
 export default combineReducers({
   channels,
   currentChannelId,
+  channelIdForModify,
   messages,
-  sendMessageState,
+  messagesQueue,
   user,
   uiState,
   form: formReducer,

@@ -27,7 +27,7 @@ export const toggleAddChannelForm = createAction('CHANNEL_ADD_FORM_TOGGLE');
 export const setFieldErrorState = createAction('CHANNEL_ADD_FORM_SET_ERROR_STATE');
 export const setFieldDefaultState = createAction('CHANNEL_ADD_FORM_SET_DEFAULT_STATE');
 
-export const createChannel = name => async (dispatch) => {
+export const createChannel = (name, resetForm) => async (dispatch) => {
   dispatch(createChannelRequest());
   try {
     const sendData = {
@@ -37,6 +37,7 @@ export const createChannel = name => async (dispatch) => {
     };
     await axios.post(addChannelUrl(), sendData);
     dispatch(createChannelSuccess());
+    resetForm();
   } catch (e) {
     console.warn(e); // eslint-disable-line no-console
     dispatch(createChannelFailure());
@@ -46,7 +47,7 @@ export const createChannel = name => async (dispatch) => {
 export const deleteChannel = id => async (dispatch) => {
   dispatch(deleteChannelRequest());
   try {
-    await axios.delete(modifyChannelUrl(id), { data: { id } });
+    await axios.delete(modifyChannelUrl(id), { data: { channelIdForModify: { id } } });
     dispatch(deleteChannelSuccess(id));
   } catch (e) {
     console.warn(e); // eslint-disable-line no-console
@@ -57,39 +58,29 @@ export const deleteChannel = id => async (dispatch) => {
 export const renameChannel = (name, channelId) => (dispatch) => {
   const url = modifyChannelUrl(channelId);
   const sendData = { data: { attributes: { name } } };
-  return new Promise((resolve, reject) => {
-    axios.patch(url, sendData)
-      .then(() => {
-        resolve();
-        dispatch(renameChannelSuccess({ name, channelId }));
-      })
-      .catch(() => {
-        reject();
-      });
-  });
+  return axios.patch(url, sendData)
+    .then(() => {
+      dispatch(renameChannelSuccess({ name, channelId }));
+    });
 };
 
 export const sendMessage = (message, isResend, key) => (dispatch) => {
   const { text, userName, channelId } = message;
   const url = addMessageUrl(message.channelId);
   const sendData = { data: { attributes: { text, userName } } };
-  return new Promise((resolve, reject) => {
-    axios.post(url, sendData)
-      .then(() => {
-        if (isResend) {
-          dispatch(removeMessageFromQueue(key));
-        }
-        resolve();
-      })
-      .catch(() => {
-        if (!isResend) {
-          dispatch(sendMessageFailure({
-            text,
-            userName,
-            channelId,
-          }));
-        }
-        reject();
-      });
-  });
+  return axios.post(url, sendData)
+    .then(() => {
+      if (isResend) {
+        dispatch(removeMessageFromQueue(key));
+      }
+    })
+    .catch(() => {
+      if (!isResend) {
+        dispatch(sendMessageFailure({
+          text,
+          userName,
+          channelId,
+        }));
+      }
+    });
 };

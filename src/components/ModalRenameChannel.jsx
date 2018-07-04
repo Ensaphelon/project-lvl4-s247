@@ -5,12 +5,12 @@ import connect from '../connect';
 
 const mapStateToProps = ({
   uiState,
-  channels,
   renameChannel,
+  channelIdForModify,
 }) => ({
   uiState,
-  channels,
   renameChannel,
+  channelIdForModify,
 });
 
 @connect(mapStateToProps)
@@ -22,9 +22,9 @@ export default class ModalRenameChannel extends React.Component {
     const {
       renameChannel,
       reset,
-      channels,
+      channelIdForModify,
     } = this.props;
-    return renameChannel(channelName, channels.channelIdForModify)
+    return renameChannel(channelName, channelIdForModify)
       .then(reset);
   }
 

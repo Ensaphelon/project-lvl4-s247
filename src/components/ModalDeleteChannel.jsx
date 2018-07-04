@@ -4,27 +4,27 @@ import connect from '../connect';
 
 const mapStateToProps = ({
   uiState,
-  channels,
+  channelIdForModify,
 }) => ({
   uiState,
-  channels,
+  channelIdForModify,
 });
 
 @connect(mapStateToProps)
 
 class ModalDeleteChannel extends React.Component {
-  async handleDelete(id) {
+  handleDelete() {
     const {
       deleteChannel,
+      channelIdForModify,
     } = this.props;
-    await deleteChannel(id);
+    deleteChannel(channelIdForModify);
   }
 
   render() {
     const {
       uiState,
       modalDeleteChannelHide,
-      channels: { channelIdForModify },
     } = this.props;
     return (
       <Modal
@@ -40,7 +40,7 @@ class ModalDeleteChannel extends React.Component {
               <button
                 type="button"
                 className="btn btn-danger"
-                onClick={() => this.handleDelete(channelIdForModify)}
+                onClick={this.handleDelete.bind(this)}
                 disabled={uiState.modalDeleteChannelButtonDisabled}
               >
                 Delete

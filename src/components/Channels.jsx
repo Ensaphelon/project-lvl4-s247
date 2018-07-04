@@ -20,7 +20,7 @@ const mapStateToProps = ({
 @connect(mapStateToProps)
 
 export default class Channels extends React.Component {
-  handleClick(e, id, showModal) {
+  handleClick(id, showModal, e) {
     e.preventDefault();
     const { setChannelForModify } = this.props;
     setChannelForModify(id);
@@ -34,7 +34,7 @@ export default class Channels extends React.Component {
         <a href="#!" alt="Edit">
           <Pencil
             size={18}
-            onClick={e => this.handleClick(e, id, modalRenameChannelShow)}
+            onClick={this.handleClick.bind(this, id, modalRenameChannelShow)}
             color={isActiveChannel ? 'white' : 'black'}
             className="position-absolute mt-2 ml-1"
           />
@@ -42,7 +42,7 @@ export default class Channels extends React.Component {
         <a href="#!" alt="Delete">
           <Trash
             size={18}
-            onClick={e => this.handleClick(e, id, modalDeleteChannelShow)}
+            onClick={this.handleClick.bind(this, id, modalDeleteChannelShow)}
             color={isActiveChannel ? 'white' : 'black'}
             className="position-absolute mt-2 ml-4"
           />
@@ -56,7 +56,7 @@ export default class Channels extends React.Component {
     return (
       <div>
         <ul className="list-group">
-          {channels.list.map(({ id, name, removable }) => {
+          {channels.map(({ id, name, removable }) => {
             const isActiveChannel = id === currentChannelId;
             const className = cn({
               'btn w-100 pr-5 pl-5': true,
@@ -65,8 +65,8 @@ export default class Channels extends React.Component {
             });
             return (
               <li className="list-group-item p-0 border-white mb-1" key={id}>
-                {removable ? this.renderControls(isActiveChannel, id) : null }
-                <button onClick={() => setActiveChannel(id)} type="button" className={className}>
+                {removable ? this.renderControls(isActiveChannel, id) : null}
+                <button onClick={setActiveChannel.bind(this, id)} type="button" className={className}>
                   {name}
                 </button>
               </li>
