@@ -14,6 +14,7 @@ const mapStateToProps = (state) => {
 @reduxForm(({
   form: 'newChannel',
 }))
+
 export default class ChannelsAdd extends React.Component {
   changeHandler = ({ target: { value } }) => {
     const { channels, setFieldErrorState, setFieldDefaultState } = this.props;
@@ -22,8 +23,8 @@ export default class ChannelsAdd extends React.Component {
   };
 
   submit = ({ channelName }, f, { reset }) => {
-    const { createChannel, addChannelFormHasError } = this.props;
-    if (!addChannelFormHasError && channelName) {
+    const { createChannel, uiState } = this.props;
+    if (!uiState.addChannelFormHasError && channelName) {
       createChannel(channelName, reset);
     }
   };

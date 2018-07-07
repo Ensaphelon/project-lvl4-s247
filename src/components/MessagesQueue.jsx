@@ -14,8 +14,20 @@ const mapStateToProps = ({
 @connect(mapStateToProps)
 
 export default class MessagesQueue extends React.Component {
+  resendMessage = (message, key) => (e) => {
+    e.preventDefault();
+    const { sendMessage } = this.props;
+    sendMessage(message, true, key);
+  };
+
+  deleteMessage = key => (e) => {
+    e.preventDefault();
+    const { removeMessageFromQueue } = this.props;
+    removeMessageFromQueue(key);
+  };
+
   render() {
-    const { messagesQueue, sendMessage, removeMessageFromQueue } = this.props;
+    const { messagesQueue } = this.props;
     const keys = Object.keys(messagesQueue);
     return (
       <ul className="messages__list list-group">
@@ -36,7 +48,7 @@ export default class MessagesQueue extends React.Component {
               <div>
                 <button
                   type="button"
-                  onClick={sendMessage.bind(this, message, true, key)}
+                  onClick={this.resendMessage(message, key)}
                   className="btn btn-link"
                 >
                   Try again
@@ -44,7 +56,7 @@ export default class MessagesQueue extends React.Component {
                 <button
                   type="button"
                   className="btn btn-link"
-                  onClick={removeMessageFromQueue.bind(this, key)}
+                  onClick={this.deleteMessage(key)}
                 >
                   Delete
                 </button>
