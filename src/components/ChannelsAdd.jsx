@@ -3,32 +3,30 @@ import { Field, reduxForm } from 'redux-form';
 import cn from 'classnames';
 import { find } from 'lodash';
 import connect from '../connect';
+import { channelsSelector } from '../selectors';
 
-const mapStateToProps = ({ channels, uiState }) => ({ channels, uiState });
+const mapStateToProps = (state) => {
+  const { uiState } = state;
+  return { uiState, channels: channelsSelector(state) };
+};
 
 @connect(mapStateToProps)
 @reduxForm(({
   form: 'newChannel',
 }))
 export default class ChannelsAdd extends React.Component {
-  handleToggle(e) {
-    e.preventDefault();
-    const { toggleAddChannelForm } = this.props;
-    toggleAddChannelForm();
-  }
-
-  changeHandler({ target: { value } }) {
+  changeHandler = ({ target: { value } }) => {
     const { channels, setFieldErrorState, setFieldDefaultState } = this.props;
     const containsInChannelsList = find(channels, channel => channel.name === value);
     return containsInChannelsList ? setFieldErrorState() : setFieldDefaultState();
-  }
+  };
 
-  submit({ channelName }, f, { reset }) {
+  submit = ({ channelName }, f, { reset }) => {
     const { createChannel, addChannelFormHasError } = this.props;
     if (!addChannelFormHasError && channelName) {
       createChannel(channelName, reset);
     }
-  }
+  };
 
   render() {
     const {
@@ -37,6 +35,7 @@ export default class ChannelsAdd extends React.Component {
         addChannelFormHasError,
         createChannelButtonDisabled,
       },
+      toggleAddChannelForm,
       handleSubmit,
     } = this.props;
     const addNewButtonClassName = cn({
@@ -54,21 +53,21 @@ export default class ChannelsAdd extends React.Component {
     return (
       <div>
         <button
-          onClick={this.handleToggle.bind(this)}
+          onClick={toggleAddChannelForm}
           type="button"
           className={addNewButtonClassName}
         >
           Add new
         </button>
-        <form onSubmit={handleSubmit(this.submit.bind(this))} className={formClassName}>
+        <form onSubmit={handleSubmit(this.submit)} className={formClassName}>
           <Field
             className={fieldClassName}
             name="channelName"
             component="input"
             type="text"
-            onChange={this.changeHandler.bind(this)}
+            onChange={this.changeHandler}
           />
-          <button type="button" onClick={this.handleToggle.bind(this)} className="btn btn-link">
+          <button type="button" onClick={toggleAddChannelForm} className="btn btn-link">
             Cancel
           </button>
           <button type="submit" className="btn btn-primary" disabled={createChannelButtonDisabled}>

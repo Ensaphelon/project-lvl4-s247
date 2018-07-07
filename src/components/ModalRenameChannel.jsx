@@ -18,7 +18,7 @@ const mapStateToProps = ({
   form: 'renameChannel',
 }))
 export default class ModalRenameChannel extends React.Component {
-  submit({ channelName }) {
+  submit = ({ channelName }) => {
     const {
       renameChannel,
       reset,
@@ -26,7 +26,7 @@ export default class ModalRenameChannel extends React.Component {
     } = this.props;
     return renameChannel(channelName, channelIdForModify)
       .then(reset);
-  }
+  };
 
   render() {
     const {
@@ -44,7 +44,7 @@ export default class ModalRenameChannel extends React.Component {
           <p>
             Enter the new channel name
           </p>
-          <form className="form-inline mt-3" onSubmit={handleSubmit(this.submit.bind(this))}>
+          <form className="form-inline mt-3" onSubmit={handleSubmit(this.submit)}>
             <div className="w-100">
               <div className="input-group mb-2">
                 <Field

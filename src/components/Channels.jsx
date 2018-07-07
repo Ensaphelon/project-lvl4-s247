@@ -4,18 +4,22 @@ import Trash from 'react-icons/lib/fa/trash';
 import Pencil from 'react-icons/lib/fa/pencil';
 import AddChannel from './ChannelsAdd';
 import connect from '../connect';
+import { channelsSelector } from '../selectors';
 
-const mapStateToProps = ({
-  channels,
-  currentChannelId,
-  modalDeleteChannelShow,
-  setChannelForModify,
-}) => ({
-  channels,
-  currentChannelId,
-  modalDeleteChannelShow,
-  setChannelForModify,
-});
+const mapStateToProps = (state) => {
+  const channels = channelsSelector(state);
+  const {
+    currentChannelId,
+    modalDeleteChannelShow,
+    setChannelForModify,
+  } = state;
+  return {
+    channels,
+    currentChannelId,
+    modalDeleteChannelShow,
+    setChannelForModify,
+  };
+};
 
 @connect(mapStateToProps)
 
