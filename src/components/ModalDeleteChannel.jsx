@@ -13,19 +13,17 @@ const mapStateToProps = ({
 @connect(mapStateToProps)
 
 class ModalDeleteChannel extends React.Component {
-  handleDelete() {
+  handleDelete = () => {
     const {
       deleteChannel,
       channelIdForModify,
     } = this.props;
     deleteChannel(channelIdForModify);
-  }
+  };
 
   render() {
-    const {
-      uiState,
-      modalDeleteChannelHide,
-    } = this.props;
+    const { uiState, modalDeleteChannelHide } = this.props;
+    const { modalDeleteChannelButtonDisabled } = uiState;
     return (
       <Modal
         show={uiState.modalDeleteChannelOpened}
@@ -40,14 +38,14 @@ class ModalDeleteChannel extends React.Component {
               <button
                 type="button"
                 className="btn btn-danger"
-                onClick={this.handleDelete.bind(this)}
-                disabled={uiState.modalDeleteChannelButtonDisabled}
+                onClick={this.handleDelete}
+                disabled={modalDeleteChannelButtonDisabled}
               >
                 Delete
               </button>
               <button
                 onClick={modalDeleteChannelHide}
-                disabled={uiState.modalDeleteChannelButtonDisabled}
+                disabled={modalDeleteChannelButtonDisabled}
                 type="button"
                 className="btn btn-link"
               >

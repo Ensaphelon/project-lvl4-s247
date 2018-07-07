@@ -10,6 +10,7 @@ import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import faker from 'faker';
+import { keyBy } from 'lodash';
 import reducers from './reducers';
 import * as actions from './actions';
 
@@ -20,8 +21,8 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 const initialState = {
-  messages: gon.messages,
-  channels: gon.channels,
+  messages: keyBy(gon.messages, message => message.id),
+  channels: keyBy(gon.channels, channel => channel.id),
   currentChannelId: gon.currentChannelId,
 };
 

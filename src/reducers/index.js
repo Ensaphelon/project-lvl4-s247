@@ -1,25 +1,25 @@
 import { combineReducers } from 'redux';
 import { handleActions } from 'redux-actions';
-import { uniqueId, omit } from 'lodash';
+import { uniqueId, mapValues, omit } from 'lodash';
 import { reducer as formReducer } from 'redux-form';
 import * as actions from '../actions';
 
 const channels = handleActions({
   [actions.addChannel](state, { payload }) {
-    return [...state, payload];
+    return { ...state, [payload.id]: payload };
   },
   [actions.deleteChannelSuccess](state, { payload }) {
-    return state.filter(channel => channel.id !== payload);
+    return omit(state, payload);
   },
   [actions.renameChannelSuccess](state, { payload: { name, channelId } }) {
-    return state.map(channel => (
+    return mapValues(state, channel => (
       channel.id !== channelId ? channel : {
         ...channel,
         name,
       }
     ));
   },
-}, []);
+}, {});
 
 const channelIdForModify = handleActions({
   [actions.setChannelForModify](state, { payload }) {
@@ -37,22 +37,13 @@ const currentChannelId = handleActions({
 }, {});
 
 const messages = handleActions({
-  [actions.addMessage](state, {
-    payload: {
-      text,
-      userName,
-      id,
-      channelId,
-    },
-  }) {
-    return [...state, {
-      text,
-      userName,
-      id,
-      channelId,
-    }];
+  [actions.addMessage](state, { payload }) {
+    return { ...state, [payload.id]: payload };
   },
-}, []);
+  [actions.deleteChannelSuccess](state, { payload }) {
+    return omit(state, payload);
+  },
+}, {});
 
 const messagesQueue = handleActions({
   [actions.removeMessageFromQueue](state, { payload }) {
