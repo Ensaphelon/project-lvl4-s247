@@ -33,7 +33,13 @@ export default class Form extends React.Component {
       <form className="form-inline mt-3" onSubmit={handleSubmit(this.submit)}>
         <div className="w-100">
           <div className="input-group mb-2">
-            <Field disabled={submitting} required className="form-control" name="message" component="textarea" />
+            <Field
+              disabled={submitting}
+              required
+              className="form-control"
+              name="message"
+              component="textarea"
+            />
             <button disabled={submitting} className="btn btn-primary" type="submit">
               Send
             </button>
