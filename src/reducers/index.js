@@ -69,17 +69,10 @@ const user = handleActions({
 
 const uiState = handleActions({
   [actions.modalToggleView](state, { payload }) {
-    switch (payload.type) {
-      case 'delete':
-        return { ...state, modalDeleteChannelOpened: !state.modalDeleteChannelOpened };
-      case 'rename':
-        return { ...state, modalRenameChannelOpened: !state.modalRenameChannelOpened };
-      default:
-        return state;
-    }
+    return { ...state, modalType: payload };
   },
   [actions.renameChannelSuccess](state) {
-    return { ...state, modalRenameChannelOpened: false };
+    return { ...state, modalType: null };
   },
   [actions.setFieldErrorState](state) {
     return { ...state, addChannelFormHasError: true };
@@ -112,13 +105,11 @@ const uiState = handleActions({
   [actions.deleteChannelSuccess](state) {
     return {
       ...state,
-      modalDeleteChannelOpened: false,
+      modalType: null,
       modalDeleteChannelButtonDisabled: false,
     };
   },
 }, {
-  modalDeleteChannelOpened: false,
-  modalRenameChannelOpened: false,
   modalDeleteChannelButtonDisabled: false,
   addChannelFormHidden: true,
   addChannelFormHasError: false,
