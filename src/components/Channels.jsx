@@ -34,7 +34,7 @@ export default class Channels extends React.Component {
     e.preventDefault();
     const { setChannelForModify, modalToggleView } = this.props;
     setChannelForModify(id);
-    modalToggleView({ type });
+    modalToggleView(type);
   };
 
   renderControls(isActiveChannel, id) {

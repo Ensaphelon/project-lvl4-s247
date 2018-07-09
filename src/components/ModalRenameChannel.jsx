@@ -28,23 +28,17 @@ export default class ModalRenameChannel extends React.Component {
       .then(reset);
   };
 
-  handleClose = () => {
-    const {
-      modalToggleView,
-    } = this.props;
-    modalToggleView({ type: 'rename' });
-  };
-
   render() {
     const {
       uiState,
       handleSubmit,
       submitting,
+      modalToggleView,
     } = this.props;
     return (
       <Modal
-        show={uiState.modalRenameChannelOpened}
-        onHide={this.handleClose}
+        show={uiState.modalType === 'rename'}
+        onHide={this.modalToggleView}
       >
         <Modal.Body>
           <p>
@@ -68,7 +62,7 @@ export default class ModalRenameChannel extends React.Component {
                   Rename
                 </button>
                 <button
-                  onClick={this.handleClose}
+                  onClick={modalToggleView}
                   disabled={submitting}
                   className="btn btn-link"
                   type="button"
