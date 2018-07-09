@@ -10,13 +10,13 @@ const mapStateToProps = (state) => {
   const channels = channelsSelector(state);
   const {
     currentChannelId,
-    modalDeleteChannelShow,
+    modalToggleView,
     setChannelForModify,
   } = state;
   return {
     channels,
     currentChannelId,
-    modalDeleteChannelShow,
+    modalToggleView,
     setChannelForModify,
   };
 };
@@ -30,21 +30,20 @@ export default class Channels extends React.Component {
     setActiveChannel(id);
   };
 
-  handleModifyClick = (id, showModal) => (e) => {
+  handleModifyClick = (id, type) => (e) => {
     e.preventDefault();
-    const { setChannelForModify } = this.props;
+    const { setChannelForModify, modalToggleView } = this.props;
     setChannelForModify(id);
-    showModal();
+    modalToggleView({ type });
   };
 
   renderControls(isActiveChannel, id) {
-    const { modalDeleteChannelShow, modalRenameChannelShow } = this.props;
     return (
       <div>
         <a href="#!" alt="Edit">
           <Pencil
             size={18}
-            onClick={this.handleModifyClick(id, modalRenameChannelShow)}
+            onClick={this.handleModifyClick(id, 'rename')}
             color={isActiveChannel ? 'white' : 'black'}
             className="position-absolute mt-2 ml-1"
           />
@@ -52,7 +51,7 @@ export default class Channels extends React.Component {
         <a href="#!" alt="Delete">
           <Trash
             size={18}
-            onClick={this.handleModifyClick(id, modalDeleteChannelShow)}
+            onClick={this.handleModifyClick(id, 'delete')}
             color={isActiveChannel ? 'white' : 'black'}
             className="position-absolute mt-2 ml-4"
           />

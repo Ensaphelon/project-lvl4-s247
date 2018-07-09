@@ -18,7 +18,7 @@ export default class App extends React.Component {
       <div>
         <div className="app__user-name mb-1">
           <span className="badge badge-light">
-            Current user: {user.name}
+            {`Current user: ${user.name}`}
           </span>
         </div>
         <div className="row">

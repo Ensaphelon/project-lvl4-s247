@@ -21,13 +21,20 @@ class ModalDeleteChannel extends React.Component {
     deleteChannel(channelIdForModify);
   };
 
+  handleClose = () => {
+    const {
+      modalToggleView,
+    } = this.props;
+    modalToggleView({ type: 'delete' });
+  };
+
   render() {
-    const { uiState, modalDeleteChannelHide } = this.props;
+    const { uiState } = this.props;
     const { modalDeleteChannelButtonDisabled } = uiState;
     return (
       <Modal
         show={uiState.modalDeleteChannelOpened}
-        onHide={modalDeleteChannelHide}
+        onHide={this.handleClose}
       >
         <Modal.Body>
           <div>
@@ -44,7 +51,7 @@ class ModalDeleteChannel extends React.Component {
                 Delete
               </button>
               <button
-                onClick={modalDeleteChannelHide}
+                onClick={this.handleClose}
                 disabled={modalDeleteChannelButtonDisabled}
                 type="button"
                 className="btn btn-link"
@@ -57,6 +64,6 @@ class ModalDeleteChannel extends React.Component {
       </Modal>
     );
   }
-};
+}
 
 export default ModalDeleteChannel;

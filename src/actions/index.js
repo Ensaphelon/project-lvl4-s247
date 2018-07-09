@@ -2,10 +2,7 @@ import { createAction } from 'redux-actions';
 import axios from 'axios';
 import { addMessageUrl, addChannelUrl, modifyChannelUrl } from '../routes';
 
-export const modalDeleteChannelShow = createAction('MODAL_DELETE_CHANNEL_SHOW');
-export const modalDeleteChannelHide = createAction('MODAL_DELETE_CHANNEL_HIDE');
-export const modalRenameChannelShow = createAction('MODAL_RENAME_CHANNEL_SHOW');
-export const modalRenameChannelHide = createAction('MODAL_RENAME_CHANNEL_HIDE');
+export const modalToggleView = createAction('MODAL_TOGGLE_VIEW');
 
 export const sendMessageFailure = createAction('MESSAGE_SEND_FAILURE');
 export const removeMessageFromQueue = createAction('MESSAGE_REMOVE_FROM_QUEUE');

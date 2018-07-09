@@ -68,17 +68,15 @@ const user = handleActions({
 }, {});
 
 const uiState = handleActions({
-  [actions.modalDeleteChannelShow](state) {
-    return { ...state, modalDeleteChannelOpened: true };
-  },
-  [actions.modalDeleteChannelHide](state) {
-    return { ...state, modalDeleteChannelOpened: false };
-  },
-  [actions.modalRenameChannelShow](state) {
-    return { ...state, modalRenameChannelOpened: true };
-  },
-  [actions.modalRenameChannelHide](state) {
-    return { ...state, modalRenameChannelOpened: false };
+  [actions.modalToggleView](state, { payload }) {
+    switch (payload.type) {
+      case 'delete':
+        return { ...state, modalDeleteChannelOpened: !state.modalDeleteChannelOpened };
+      case 'rename':
+        return { ...state, modalRenameChannelOpened: !state.modalRenameChannelOpened };
+      default:
+        return state;
+    }
   },
   [actions.renameChannelSuccess](state) {
     return { ...state, modalRenameChannelOpened: false };
@@ -98,6 +96,12 @@ const uiState = handleActions({
   [actions.createChannelFailure](state) {
     return { ...state, createChannelButtonDisabled: false };
   },
+  [actions.deleteChannelRequest](state) {
+    return { ...state, modalDeleteChannelButtonDisabled: true };
+  },
+  [actions.deleteChannelFailure](state) {
+    return { ...state, modalDeleteChannelButtonDisabled: false };
+  },
   [actions.createChannelSuccess](state) {
     return {
       ...state,
@@ -112,19 +116,13 @@ const uiState = handleActions({
       modalDeleteChannelButtonDisabled: false,
     };
   },
-  [actions.deleteChannelRequest](state) {
-    return { ...state, modalDeleteChannelButtonDisabled: true };
-  },
-  [actions.deleteChannelFailure](state) {
-    return { ...state, modalDeleteChannelButtonDisabled: false };
-  },
 }, {
   modalDeleteChannelOpened: false,
   modalRenameChannelOpened: false,
+  modalDeleteChannelButtonDisabled: false,
   addChannelFormHidden: true,
   addChannelFormHasError: false,
   createChannelButtonDisabled: false,
-  modalDeleteChannelButtonDisabled: false,
 });
 
 export default combineReducers({
